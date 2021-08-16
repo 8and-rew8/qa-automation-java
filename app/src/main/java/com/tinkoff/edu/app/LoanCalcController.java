@@ -3,7 +3,6 @@ package com.tinkoff.edu.app;
 /**
  * Creating new loan-request controller
  */
-
 public class LoanCalcController {
     /**
      * Validate and logs request

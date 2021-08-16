@@ -1,5 +1,8 @@
 package com.tinkoff.edu.app;
 
+/**
+ * Store loan request data
+ */
 public class LoanCalcDao {
     private static int requestId;
     /**

@@ -1,6 +1,8 @@
 package com.tinkoff.edu.app;
 
-
+/**
+ * Logic for loan request
+ */
 public class LoanCalcService {
     /**
      * Loan calculation

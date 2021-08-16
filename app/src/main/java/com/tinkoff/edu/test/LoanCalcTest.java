@@ -5,7 +5,6 @@ import com.tinkoff.edu.app.LoanCalcController;
 /**
  * Loan Calc Tests
  */
-
 public class LoanCalcTest {
     public static void main(String... args) {
 
