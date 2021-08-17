@@ -6,9 +6,10 @@ package com.tinkoff.edu.app;
 public class LoanCalcLogger {
     /**
      * out info in command line
-     * @param requestId
+     *
+     * @param loanResponse
      */
-    public static void log(int requestId) {
-        System.out.println("created request with ID " + requestId);
+    public static void log(LoanResponse loanResponse) {
+        System.out.println("Created request with ID " + loanResponse.getRequestId());
     }
 }
