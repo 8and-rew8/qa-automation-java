@@ -7,7 +7,7 @@ public class LoanCalcDao {
     /**
      * TODO persists request
      *
-     * @return Request ID
+     * @return Loan Response
      */
     public LoanResponse save() {
         return new LoanResponse();
