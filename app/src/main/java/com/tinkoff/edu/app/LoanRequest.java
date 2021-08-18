@@ -1,5 +1,8 @@
 package com.tinkoff.edu.app;
 
+/**
+ * loan request instance
+ */
 public class LoanRequest {
     private final ClientType type;
     private final int months;

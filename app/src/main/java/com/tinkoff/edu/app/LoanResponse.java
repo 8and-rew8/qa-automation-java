@@ -1,5 +1,8 @@
 package com.tinkoff.edu.app;
 
+/**
+ * loan response instance
+ */
 public class LoanResponse {
     private int requestId;
     private LoanResponseType responseType;
