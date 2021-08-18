@@ -12,7 +12,7 @@ public class LoanCalcTest {
 
         System.out.println(
                 new LoanCalcController().createRequest(
-                        new LoanRequest(ClientType.PERSON,10,1000))
+                        new LoanRequest(ClientType.PERSON, 10, 1000))
                         + "; ID should be 1 and answer should be APPROVED");
     }
 }
