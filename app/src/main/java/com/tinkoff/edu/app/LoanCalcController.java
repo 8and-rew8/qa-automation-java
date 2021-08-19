@@ -6,11 +6,14 @@ package com.tinkoff.edu.app;
 public class LoanCalcController {
     /**
      * Validate and logs request
+     *
+     * @param loanRequest
      */
-    public static int createRequest() {
-        int requestId = LoanCalcService.createRequest();
-        LoanCalcLogger.log(requestId);
+    public LoanResponse createRequest(LoanRequest loanRequest) {
 
-        return requestId;
+        LoanResponse loanResponse = new LoanCalcService().createRequest(loanRequest);
+        LoanCalcLogger.log(loanResponse);
+
+        return loanResponse;
     }
 }

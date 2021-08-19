@@ -6,9 +6,18 @@ package com.tinkoff.edu.app;
 public class LoanCalcService {
     /**
      * Loan calculation
+     *
+     * @param loanRequest
      */
-    public static int createRequest() {
-        //TODO data processing
-        return LoanCalcDao.save();
+    public LoanResponse createRequest(LoanRequest loanRequest) {
+        //TODO more data processing
+        LoanResponse loanResponse = new LoanCalcDao().save();
+        if (loanRequest.getType() != ClientType.PERSON) {
+            loanResponse.setResponseType(LoanResponseType.DENIED);
+        } else {
+            loanResponse.setResponseType(LoanResponseType.APPROVED);
+        }
+
+        return loanResponse;
     }
 }
