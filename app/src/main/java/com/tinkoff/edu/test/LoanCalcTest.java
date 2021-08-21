@@ -1,6 +1,8 @@
 package com.tinkoff.edu.test;
 
-import com.tinkoff.edu.app.*;
+import com.tinkoff.edu.app.ClientType;
+import com.tinkoff.edu.app.LoanCalcController;
+import com.tinkoff.edu.app.LoanRequest;
 
 /**
  * Loan Calc Tests
