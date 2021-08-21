@@ -11,10 +11,6 @@ public class SmeFriendlyService implements LoanCalcService {
         this.repo = repo;
     }
 
-    public LoanCalcRepo getRepo() {
-        return repo;
-    }
-
     /**
      * Loan calculation
      *
