@@ -4,6 +4,17 @@ package com.tinkoff.edu.app;
  * Creating new loan-request controller
  */
 public class LoanCalcController {
+    private LoanCalcService loanCalcService;
+
+    /**
+     * Constructor DI
+     *
+     * @param loanCalcService
+     */
+    public LoanCalcController(LoanCalcService loanCalcService) {
+        this.loanCalcService = loanCalcService;
+    }
+
     /**
      * Validate and logs request
      *
@@ -11,9 +22,8 @@ public class LoanCalcController {
      */
     public LoanResponse createRequest(LoanRequest loanRequest) {
 
-        LoanResponse loanResponse = new LoanCalcService().createRequest(loanRequest);
-        LoanCalcLogger.log(loanResponse);
+        LoanCalcLogger.log(loanCalcService.createRequest(loanRequest));
 
-        return loanResponse;
+        return loanCalcService.createRequest(loanRequest);
     }
 }
