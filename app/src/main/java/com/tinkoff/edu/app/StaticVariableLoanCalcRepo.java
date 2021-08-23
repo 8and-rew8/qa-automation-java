@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Store loan request data
  */
-public class StaticArrayListLoanCalcRepo implements LoanCalcRepo {
+public class StaticVariableLoanCalcRepo implements LoanCalcRepo {
     private static final ArrayList<LoanResponse> loanResponseArrayList = new ArrayList<>();
 
     /**
