@@ -1,5 +1,7 @@
 package com.tinkoff.edu.app;
 
+import com.tinkoff.edu.app.enums.ClientType;
+
 /**
  * loan request instance
  */

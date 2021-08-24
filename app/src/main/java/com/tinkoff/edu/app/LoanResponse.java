@@ -1,5 +1,7 @@
 package com.tinkoff.edu.app;
 
+import com.tinkoff.edu.app.enums.LoanResponseType;
+
 /**
  * loan response instance
  */

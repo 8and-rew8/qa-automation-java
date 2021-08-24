@@ -1,5 +1,7 @@
 package com.tinkoff.edu.app;
 
+import com.tinkoff.edu.app.interfaces.LoanCalcRepo;
+
 import java.util.ArrayList;
 
 /**
@@ -7,6 +9,16 @@ import java.util.ArrayList;
  */
 public class StaticVariableLoanCalcRepo implements LoanCalcRepo {
     private static final ArrayList<LoanResponse> loanResponseArrayList = new ArrayList<>();
+
+    /**
+     * get size of repo
+     *
+     * @return int
+     */
+    @Override
+    public int getRepoSize() {
+        return loanResponseArrayList.size();
+    }
 
     /**
      * TODO persists request
