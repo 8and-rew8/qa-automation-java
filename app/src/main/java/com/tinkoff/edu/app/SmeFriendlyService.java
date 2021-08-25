@@ -1,5 +1,10 @@
 package com.tinkoff.edu.app;
 
+import com.tinkoff.edu.app.enums.ClientType;
+import com.tinkoff.edu.app.enums.LoanResponseType;
+import com.tinkoff.edu.app.interfaces.LoanCalcRepo;
+import com.tinkoff.edu.app.interfaces.LoanCalcService;
+
 public class SmeFriendlyService implements LoanCalcService {
     private LoanCalcRepo repo;
 
