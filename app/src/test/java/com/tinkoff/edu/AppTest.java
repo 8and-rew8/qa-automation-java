@@ -37,7 +37,7 @@ public class AppTest {
     @DisplayName("Номер запроса должен совпадать с размером списка")
     public void shouldGetIncrementedIdWhenAnyCall() {
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
-        assertEquals(loanCalcRepo.getRepoSize(), loanResponse.getRequestId(), "Expected" + loanCalcRepo.getRepoSize() + " but actual " + loanResponse.getRequestId());
+        assertEquals(loanCalcRepo.getRepoSize(), loanResponse.getRequestId(), "Expected " + loanCalcRepo.getRepoSize() + " but actual " + loanResponse.getRequestId());
     }
 
 }
