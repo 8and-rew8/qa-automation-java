@@ -34,7 +34,7 @@ public class AppTest {
     @Test
     public void shouldGetIncrementedIdWhenAnyCall(){
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
-        assertEquals(loanCalcRepo.getRepoSize(),loanResponse.getRequestId());
+        assertEquals(loanCalcRepo.getRepoSize(), loanResponse.getRequestId());
     }
 
 }
