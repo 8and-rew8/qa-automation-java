@@ -19,7 +19,7 @@ public class AppTest {
     private LoanRequest loanRequest;
 
     @BeforeEach
-    public void Init(){
+    public void Init() {
         loanRequest = new LoanRequest(ClientType.PERSON, 10, 1000);
         loanCalcRepo = new StaticVariableLoanCalcRepo();
         loanCalcService = new DefaultLoanCalcService(loanCalcRepo);
