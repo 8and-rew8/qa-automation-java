@@ -28,7 +28,7 @@ public class AppTest {
     @Test
     public void shouldGetId1WhenFirstCall() {
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
-        assertEquals(1,loanResponse.getRequestId());
+        assertEquals(1, loanResponse.getRequestId());
     }
 
     @Test
