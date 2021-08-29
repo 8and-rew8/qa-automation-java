@@ -7,8 +7,8 @@ import java.util.ArrayList;
 /**
  * Store loan request data
  */
-public class StaticVariableLoanCalcRepo implements LoanCalcRepo {
-    private static final ArrayList<LoanResponse> loanResponseArrayList = new ArrayList<>();
+public class VariableLoanCalcRepo implements LoanCalcRepo {
+    private ArrayList<LoanResponse> loanResponseArrayList = new ArrayList<>();
 
     /**
      * get size of repo
