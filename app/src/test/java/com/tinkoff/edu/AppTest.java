@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.*;
 
 public class AppTest {
     private LoanCalcService loanCalcService;
@@ -45,7 +46,7 @@ public class AppTest {
     @Test
     @DisplayName("Поля запроса не должны быть нулевыми")
     public void shouldGetErrorWhenApplyNullRequest() {
-        LoanRequest loanNullRequest = new LoanRequest(null, 0, 0);
+        LoanRequest loanNullRequest = new LoanRequest();
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanNullRequest);
         assertEquals(-1, loanResponse.getRequestId(), "Expected request with ID -1 but actual " + loanResponse.getRequestId());
     }
