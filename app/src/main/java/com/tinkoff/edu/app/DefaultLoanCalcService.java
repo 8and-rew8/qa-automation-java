@@ -9,7 +9,7 @@ import com.tinkoff.edu.app.interfaces.LoanCalcService;
  * Logic for loan request
  */
 public class DefaultLoanCalcService implements LoanCalcService {
-    private LoanCalcRepo repo;
+    private final LoanCalcRepo repo;
 
     /**
      * Constructor DI
@@ -29,8 +29,10 @@ public class DefaultLoanCalcService implements LoanCalcService {
     public LoanResponse createRequest(LoanRequest loanRequest) {
         //TODO more data processing
         LoanResponse loanResponse = repo.save();
-        if (((loanRequest.getType() == ClientType.PERSON) & (loanRequest.getAmount() <= 10_000.0) & (loanRequest.getAmount() > 0) & (loanRequest.getMonths() <= 12) & (loanRequest.getMonths() > 0)) |
-                ((loanRequest.getType() == ClientType.OOO) & (loanRequest.getAmount() > 10_000.0) & (loanRequest.getMonths() < 12) & (loanRequest.getMonths() > 0))) {
+        if (((loanRequest.getType() == ClientType.PERSON) & (loanRequest.getAmount() <= 10_000.0) &
+                (loanRequest.getAmount() > 0) & (loanRequest.getMonths() <= 12) & (loanRequest.getMonths() > 0)) |
+                    ((loanRequest.getType() == ClientType.OOO) & (loanRequest.getAmount() > 10_000.0) &
+                        (loanRequest.getMonths() < 12) & (loanRequest.getMonths() > 0))) {
             loanResponse.setResponseType(LoanResponseType.APPROVED);
         } else {
             loanResponse.setResponseType(LoanResponseType.DENIED);

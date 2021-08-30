@@ -45,13 +45,13 @@ public class AppTest {
     @Test
     @DisplayName("Поля запроса не должны быть нулевыми")
     public void shouldGetErrorWhenApplyNullRequest() {
-        LoanRequest loanNullRequest = new LoanRequest(null, 0, 0);
+        LoanRequest loanNullRequest = new LoanRequest();
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanNullRequest);
         assertEquals(-1, loanResponse.getRequestId(), "Expected request with ID -1 but actual " + loanResponse.getRequestId());
     }
 
     @Test
-    @DisplayName("Можно дать кредит только на положительное число месяцев")
+    @DisplayName("Можно дать кредит только на положительную сумму")
     public void shouldGetErrorWhenApplyZeroOrNegativeAmountRequest() {
         LoanRequest loanZeroAmountRequest = new LoanRequest(ClientType.PERSON, 12, 0);
         LoanRequest loanNegativeAmountRequest = new LoanRequest(ClientType.PERSON, 12, -1);
@@ -65,7 +65,7 @@ public class AppTest {
     }
 
     @Test
-    @DisplayName("Можно дать кредит только на положительную сумму")
+    @DisplayName("Можно дать кредит только на положительное число месяцев")
     public void shouldGetErrorWhenApplyZeroOrNegativeMonthsRequest() {
         LoanRequest loanZeroMonthsRequest = new LoanRequest(ClientType.OOO, 0, 11000);
         LoanRequest loanNegativeMonthsRequest = new LoanRequest(ClientType.OOO, -1, 11000);
