@@ -24,9 +24,13 @@ public class LoanCalcController {
      */
     public LoanResponse createRequest(LoanRequest loanRequest) {
 
-        LoanResponse loanResponse = loanCalcService.createRequest(loanRequest);
-        LoanCalcLogger.log(loanResponse);
-
-        return loanResponse;
+        LoanResponse validationResponse = loanCalcService.validationRequest(loanRequest);
+        if (validationResponse.getRequestId() == 0) {
+            LoanResponse loanResponse = loanCalcService.createRequest(loanRequest);
+            LoanCalcLogger.log(loanResponse);
+            return loanResponse;
+        } else {
+            return validationResponse;
+        }
     }
 }

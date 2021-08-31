@@ -30,16 +30,21 @@ public class DefaultLoanCalcService implements LoanCalcService {
      * @return Error code
      * @throws RuntimeException
      */
-    public int validationRequest(LoanRequest loanRequest) throws RuntimeException {
+    public LoanResponse validationRequest(LoanRequest loanRequest) throws RuntimeException {
+        LoanResponse loanResponse = new LoanResponse();
         try {
             boolean isPresent = Arrays.stream(ClientType.values()).anyMatch(element ->
                     Objects.equals(element.getType(), loanRequest.getType().toString()));
             if ((loanRequest.getAmount() <= 0) || (loanRequest.getMonths() <= 0) || (!isPresent)) {
-                return -1;
+                loanResponse.setRequestId(-1);
+                return loanResponse;
             }
-            else return 0;
+            else
+                loanResponse.setRequestId(0);
+                return loanResponse;
         } catch (NullPointerException e) {
-            return -1;
+            loanResponse.setRequestId(-1);
+            return loanResponse;
         }
     }
 
