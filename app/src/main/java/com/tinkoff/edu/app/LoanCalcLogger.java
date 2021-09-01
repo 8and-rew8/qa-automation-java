@@ -1,5 +1,7 @@
 package com.tinkoff.edu.app;
 
+import com.tinkoff.edu.app.enums.LoanResponseType;
+
 /**
  * logging info about loan request
  */
@@ -11,6 +13,13 @@ public class LoanCalcLogger {
      * @param loanResponse
      */
     public static void log(LoanResponse loanResponse) {
-        System.out.println("Created request with ID " + loanResponse.getRequestId());
+        int requestId = loanResponse.getRequestId();
+        LoanResponseType loanResponseType = loanResponse.getResponseType();
+
+        if (requestId == -1) {
+            System.out.println("Had error with request ID " + requestId + " and response type " + loanResponseType);
+        } else {
+            System.out.println("Created request with ID " + requestId + " and response type " + loanResponseType);
+        }
     }
 }

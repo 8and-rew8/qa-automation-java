@@ -13,18 +13,19 @@ public class LoanResponse {
         this.requestId++;
     }
 
-    public void setResponseType(LoanResponseType responseType) {
-        this.responseType = responseType;
-    }
-
     public int getRequestId() {
         return requestId;
     }
 
-    public String toString() {
-        return "Answer for request with ID "
-                + this.requestId
-                + " is "
-                + this.responseType;
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
+
+    public LoanResponseType getResponseType() {
+        return responseType;
+    }
+
+    public void setResponseType(LoanResponseType responseType) {
+        this.responseType = responseType;
     }
 }

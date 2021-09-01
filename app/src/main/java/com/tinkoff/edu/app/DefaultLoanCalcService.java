@@ -5,11 +5,14 @@ import com.tinkoff.edu.app.enums.LoanResponseType;
 import com.tinkoff.edu.app.interfaces.LoanCalcRepo;
 import com.tinkoff.edu.app.interfaces.LoanCalcService;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * Logic for loan request
  */
 public class DefaultLoanCalcService implements LoanCalcService {
-    private LoanCalcRepo repo;
+    private final LoanCalcRepo repo;
 
     /**
      * Constructor DI
@@ -21,6 +24,31 @@ public class DefaultLoanCalcService implements LoanCalcService {
     }
 
     /**
+     * validate request for non-valid inputs
+     *
+     * @param loanRequest
+     * @return Error code
+     * @throws RuntimeException
+     */
+    public LoanResponse validationRequest(LoanRequest loanRequest) throws RuntimeException {
+        LoanResponse loanResponse = new LoanResponse();
+        try {
+            boolean isPresent = Arrays.stream(ClientType.values()).anyMatch(element ->
+                    Objects.equals(element.getType(), loanRequest.getType().toString()));
+            if ((loanRequest.getAmount() <= 0) || (loanRequest.getMonths() <= 0) || (!isPresent)) {
+                loanResponse.setRequestId(-1);
+                return loanResponse;
+            }
+            else
+                loanResponse.setRequestId(0);
+                return loanResponse;
+        } catch (NullPointerException e) {
+            loanResponse.setRequestId(-1);
+            return loanResponse;
+        }
+    }
+
+    /**
      * Loan calculation
      *
      * @param loanRequest
@@ -29,10 +57,23 @@ public class DefaultLoanCalcService implements LoanCalcService {
     public LoanResponse createRequest(LoanRequest loanRequest) {
         //TODO more data processing
         LoanResponse loanResponse = repo.save();
-        if (loanRequest.getType() != ClientType.PERSON) {
-            loanResponse.setResponseType(LoanResponseType.DENIED);
+        if (loanRequest.getType() == ClientType.PERSON){
+            if ((loanRequest.getAmount() <= 10_000.0) & (loanRequest.getMonths() <= 12)) {
+                loanResponse.setResponseType(LoanResponseType.APPROVED);
+            } else {
+                loanResponse.setResponseType(LoanResponseType.DENIED);
+                loanResponse.setRequestId(-1);
+            }
+        } else if (loanRequest.getType() == ClientType.OOO){
+            if ((loanRequest.getAmount() > 10_000.0) & (loanRequest.getMonths() < 12)) {
+                loanResponse.setResponseType(LoanResponseType.APPROVED);
+            } else {
+                loanResponse.setResponseType(LoanResponseType.DENIED);
+                loanResponse.setRequestId(-1);
+            }
         } else {
-            loanResponse.setResponseType(LoanResponseType.APPROVED);
+            loanResponse.setResponseType(LoanResponseType.DENIED);
+            loanResponse.setRequestId(-1);
         }
 
         return loanResponse;
