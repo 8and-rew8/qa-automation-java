@@ -46,9 +46,8 @@ public class AppTest {
     public void shouldGetErrorWhenApplyNullRequest() {
         LoanRequest loanNullRequest = new LoanRequest();
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanNullRequest);
-        int responseId = loanResponse.getRequestId();
-        assertEquals(-1, responseId,
-                "Expected validation failure with code -1 but actual " + responseId);
+        assertEquals(-1, loanResponse.getRequestId(),
+                "Expected validation failure with code -1 but actual " + loanResponse.getRequestId());
     }
 
     @Test
@@ -56,9 +55,8 @@ public class AppTest {
     public void shouldGetErrorWhenApplyZeroAmountRequest() {
         LoanRequest loanZeroAmountRequest = new LoanRequest(ClientType.PERSON, 12, 0);
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanZeroAmountRequest);
-        int responseId = loanResponse.getRequestId();
-            assertEquals(-1, responseId,
-                    "Expected validation failure with code -1 but actual " + responseId);
+            assertEquals(-1, loanResponse.getRequestId(),
+                    "Expected validation failure with code -1 but actual " + loanResponse.getRequestId());
     }
 
     @Test
@@ -66,19 +64,17 @@ public class AppTest {
     public void shouldGetErrorWhenApplyNegativeAmountRequest(){
         LoanRequest loanNegativeAmountRequest = new LoanRequest(ClientType.PERSON, 12, -1);
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanNegativeAmountRequest);
-        int responseId = loanResponse.getRequestId();
-        assertEquals(-1, responseId,
-                "Expected validation failure with code -1 but actual " + responseId);
+        assertEquals(-1, loanResponse.getRequestId(),
+                "Expected validation failure with code -1 but actual " + loanResponse.getRequestId());
     }
 
     @Test
-    @DisplayName("Нельзя дать кредит на 0 месяцнв")
+    @DisplayName("Нельзя дать кредит на 0 месяцев")
     public void shouldGetErrorWhenApplyZeroMonthsRequest() {
         LoanRequest loanZeroMonthsRequest = new LoanRequest(ClientType.OOO, 0, 11000);
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanZeroMonthsRequest);
-        int responseId = loanResponse.getRequestId();
-            assertEquals(-1, responseId,
-                    "Expected validation failure with code -1 but actual " + responseId);
+            assertEquals(-1, loanResponse.getRequestId(),
+                    "Expected validation failure with code -1 but actual " + loanResponse.getRequestId());
     }
 
     @Test
@@ -86,9 +82,8 @@ public class AppTest {
     public void shouldGetErrorWhenApplyNegativeMonthsRequest(){
         LoanRequest loanNegativeMonthsRequest = new LoanRequest(ClientType.OOO, -1, 11000);
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanNegativeMonthsRequest);
-        int responseId = loanResponse.getRequestId();
-        assertEquals(-1, responseId,
-                "Expected validation failure with code -1 but actual " + responseId);
+        assertEquals(-1, loanResponse.getRequestId(),
+                "Expected validation failure with code -1 but actual " + loanResponse.getRequestId());
 
     }
 
@@ -97,9 +92,8 @@ public class AppTest {
     public void shouldGetErrorWhenIpClientType() {
         LoanRequest loanRequestForIp = new LoanRequest(ClientType.IP, 10, 1000);
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequestForIp);
-        int responseId = loanResponse.getRequestId();
-        assertEquals(-1, responseId,
-                "Expected validation failure with code -1 but actual " + responseId);
+        assertEquals(-1, loanResponse.getRequestId(),
+                "Expected validation failure with code -1 but actual " + loanResponse.getRequestId());
     }
 
     @Test
@@ -107,9 +101,8 @@ public class AppTest {
     public void shouldGetErrorWhenOooClientTypeAndAmountTooLittle() {
         LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 10, 1000);
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
-        int responseId = loanResponse.getRequestId();
-        assertEquals(-1, responseId,
-                "Expected validation failure with code -1 but actual " + responseId);
+        assertEquals(-1, loanResponse.getRequestId(),
+                "Expected validation failure with code -1 but actual " + loanResponse.getRequestId());
     }
 
     @Test
@@ -117,9 +110,8 @@ public class AppTest {
     public void shouldGetErrorWhenPersonLoanForMoreThenYear() {
         LoanRequest loanRequestForPerson = new LoanRequest(ClientType.PERSON, 15, 10000);
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequestForPerson);
-        int responseId = loanResponse.getRequestId();
-        assertEquals(-1, responseId,
-                "Expected validation failure with code -1 but actual " + responseId);
+        assertEquals(-1, loanResponse.getRequestId(),
+                "Expected validation failure with code -1 but actual " + loanResponse.getRequestId());
     }
 
     @Test
@@ -127,18 +119,17 @@ public class AppTest {
     public void shouldGetErrorWhenOooLoanForMoreThenYear(){
         LoanRequest loanRequestForOoo = new LoanRequest(ClientType.OOO, 12, 11000);
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequestForOoo);
-        int responseId = loanResponse.getRequestId();
-        assertEquals(-1, responseId,
-                "Expected validation failure with code -1 but actual " + responseId);
+        assertEquals(-1, loanResponse.getRequestId(),
+                "Expected validation failure with code -1 but actual " + loanResponse.getRequestId());
     }
+
     @Test
     @DisplayName("Для ООО даем кредит на сумму больше 10к и сроком меньше 12м")
     public void shouldNotGetErrorWhenOooLoanForLessThenYearAndAmountMoreThen10k(){
         LoanRequest loanRequestForOoo = new LoanRequest(ClientType.OOO, 10, 11000);
         LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequestForOoo);
-        int responseId = loanResponse.getRequestId();
-        assertEquals(1, responseId,
-                "Expected validation failure with code -1 but actual " + responseId);
+        assertEquals(1, loanResponse.getRequestId(),
+                "Expected request creation with ID 1 but actual " + loanResponse.getRequestId());
     }
 
 
