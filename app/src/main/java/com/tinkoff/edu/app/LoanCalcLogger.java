@@ -13,7 +13,7 @@ public class LoanCalcLogger {
      * @param loanResponse
      */
     public static void log(LoanResponse loanResponse) {
-        int requestId = loanResponse.getRequestId();
+        int requestId = loanResponse.getCreationFlag();
         LoanResponseType loanResponseType = loanResponse.getResponseType();
 
         if (requestId == -1) {
