@@ -9,11 +9,13 @@ public class LoanRequest {
     private ClientType type;
     private int months;
     private int amount;
+    private String fio;
 
-    public LoanRequest(ClientType type, int months, int amount) {
+    public LoanRequest(ClientType type, int months, int amount, String fio) {
         this.type = type;
         this.months = months;
         this.amount = amount;
+        this.fio = fio;
     }
 
     public LoanRequest() {
