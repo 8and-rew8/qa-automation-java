@@ -38,8 +38,9 @@ public class DefaultLoanCalcService implements LoanCalcService {
             if ((loanRequest.getAmount() <= 0) || (loanRequest.getMonths() <= 0) || (!isPresent)) {
                 loanResponse.setCreationFlag(-1);
                 return loanResponse;
-            } else
+            } else {
                 loanResponse.setCreationFlag(0);
+            }
             return loanResponse;
         } catch (NullPointerException e) {
             loanResponse.setCreationFlag(-1);
@@ -70,7 +71,6 @@ public class DefaultLoanCalcService implements LoanCalcService {
      */
     @Override
     public LoanResponse createRequest(LoanRequest loanRequest) {
-        //TODO more data processing
         LoanResponse loanResponse = repo.save(loanRequest);
         switch (loanRequest.getType()) {
             case PERSON:
