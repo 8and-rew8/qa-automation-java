@@ -11,14 +11,17 @@ import java.util.Objects;
  * Store loan request data
  */
 public class VariableLoanCalcRepo implements LoanCalcRepo {
-    private Object[][] loanRequestAndResponseArray = new Object[1000][2];
+    private final Object[][] loanRequestAndResponseArray = new Object[100][2];
+    public int counter = 1;
 
     @Override
     public String getRequestStatus(String requestUUID) {
-        for (int i = 0; i < loanRequestAndResponseArray.length; i++) {
-            LoanResponse loanResponse = (LoanResponse) loanRequestAndResponseArray[i][1];
-            if (Objects.equals(requestUUID, loanResponse.getRequestUUID())) {
-                return loanResponse.getResponseType().name();
+        for (int i = 0; i < counter - 1; i++) {
+            if (loanRequestAndResponseArray[i][1] instanceof LoanResponse) {
+                LoanResponse loanResponse = (LoanResponse) loanRequestAndResponseArray[i][1];
+                if (Objects.equals(requestUUID, loanResponse.getRequestUUID())) {
+                    return loanResponse.getResponseType().name();
+                }
             }
         }
         return "There is no such request with id " + requestUUID;
@@ -26,7 +29,7 @@ public class VariableLoanCalcRepo implements LoanCalcRepo {
 
     @Override
     public boolean updateRequestStatus(String requestUUID) {
-        for (int i = 0; i < loanRequestAndResponseArray.length; i++) {
+        for (int i = 0; i < counter - 1; i++) {
             LoanResponse loanResponse = (LoanResponse) loanRequestAndResponseArray[i][1];
             if ((Objects.equals(requestUUID, loanResponse.getRequestUUID())) & (loanResponse.getResponseType() != null)) {
                 switch (loanResponse.getResponseType()) {
@@ -46,17 +49,21 @@ public class VariableLoanCalcRepo implements LoanCalcRepo {
     }
 
     /**
-     * TODO persists request
-     *
      * @return Loan Response
      */
     @Override
     public LoanResponse save(LoanRequest loanRequest) {
-        LoanResponse loanResponse = new LoanResponse();
-        for (int i = 0; i < loanRequestAndResponseArray.length; i++) {
-            loanRequestAndResponseArray[i][0] = loanRequest;
-            loanRequestAndResponseArray[i][1] = loanResponse;
+        try {
+            LoanResponse loanResponse = new LoanResponse();
+            for (int i = 0; i < counter; i++) {
+                loanRequestAndResponseArray[i][0] = loanRequest;
+                loanRequestAndResponseArray[i][1] = loanResponse;
+            }
+            counter++;
+            return loanResponse;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new ArrayIndexOutOfBoundsException("Array has been expend");
         }
-        return loanResponse;
+
     }
 }

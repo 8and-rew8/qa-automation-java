@@ -1,5 +1,6 @@
 package com.tinkoff.edu.app;
 
+import com.tinkoff.edu.app.enums.LoanResponseType;
 import com.tinkoff.edu.app.interfaces.LoanCalcService;
 
 /**
@@ -22,15 +23,16 @@ public class LoanCalcController {
      *
      * @param loanRequest
      */
-    public LoanResponse createRequest(LoanRequest loanRequest) {
-
-        LoanResponse validationResponse = loanCalcService.validationRequest(loanRequest);
-        if (validationResponse.getCreationFlag() == 0) {
+    public LoanResponse createRequest(LoanRequest loanRequest) throws RuntimeException, BusinessRulesException {
+        try {
+            loanCalcService.validationRequest(loanRequest);
             LoanResponse loanResponse = loanCalcService.createRequest(loanRequest);
             LoanCalcLogger.log(loanResponse);
             return loanResponse;
-        } else {
-            return validationResponse;
+        } catch (NullPointerException e) {
+            throw new NullPointerException("npe");
+        } catch (BusinessRulesException e) {
+            throw new BusinessRulesException("request validation failed", e);
         }
     }
 }
