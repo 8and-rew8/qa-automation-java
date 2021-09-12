@@ -8,10 +8,10 @@ import com.tinkoff.edu.app.enums.ClientType;
 public class LoanRequest {
     private ClientType type;
     private int months;
-    private int amount;
+    private double amount;
     private String fio;
 
-    public LoanRequest(ClientType type, int months, int amount, String fio) {
+    public LoanRequest(ClientType type, int months, double amount, String fio) {
         this.type = type;
         this.months = months;
         this.amount = amount;
@@ -19,6 +19,10 @@ public class LoanRequest {
     }
 
     public LoanRequest() {
+    }
+
+    public String getFio() {
+        return fio;
     }
 
     public ClientType getType() {
@@ -29,7 +33,7 @@ public class LoanRequest {
         return months;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 }
