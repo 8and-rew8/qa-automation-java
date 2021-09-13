@@ -3,9 +3,7 @@ package com.tinkoff.edu.app;
 import com.tinkoff.edu.app.enums.LoanResponseType;
 import com.tinkoff.edu.app.interfaces.LoanCalcRepo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Store loan request data

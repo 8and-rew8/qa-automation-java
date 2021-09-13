@@ -210,11 +210,11 @@ public class AppTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("Case #17 - Переполнение массива")
     public void shouldGetErrorWhenRepoIsFull() {
+        LoanCalcService localLoanCalcService = new DefaultLoanCalcService(new VariableLoanCalcRepo());
         LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 10, 11000, "Пол Павель Михалыч");
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> loanCalcService.createManyRequests(101, loanRequest),
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> localLoanCalcService.createManyRequests(101, loanRequest),
                 "Repo didn't expend");
     }
 
