@@ -7,6 +7,8 @@ import com.tinkoff.edu.app.interfaces.LoanCalcService;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Logic for loan request
@@ -30,21 +32,36 @@ public class DefaultLoanCalcService implements LoanCalcService {
      * @return Error code
      * @throws RuntimeException
      */
-    public LoanResponse validationRequest(LoanRequest loanRequest) throws RuntimeException {
+    public LoanResponse validationRequest(LoanRequest loanRequest) throws RuntimeException, BusinessRulesException {
         LoanResponse loanResponse = new LoanResponse();
         try {
             boolean isPresent = Arrays.stream(ClientType.values()).anyMatch(element ->
                     Objects.equals(element.getType(), loanRequest.getType().toString()));
-            if ((loanRequest.getAmount() <= 0) || (loanRequest.getMonths() <= 0) || (!isPresent)) {
-                loanResponse.setCreationFlag(-1);
-                return loanResponse;
+            if ((loanRequest.getAmount() == 0) || (loanRequest.getMonths() == 0) || (!isPresent)) {
+                throw new NullPointerException("npe");
+            } else if (loanRequest.getAmount() < 0.01 || loanRequest.getAmount() > 999_999.99) {
+                throw new BusinessRulesException("wrong loan amount");
+            } else if (loanRequest.getMonths() < 1 || loanRequest.getMonths() > 100) {
+                throw new BusinessRulesException("wrong amount of months");
             } else {
-                loanResponse.setCreationFlag(0);
+                String regex = "^[А-Яа-я_ ]{9,99}$";
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(loanRequest.getFio());
+                if (!m.matches()) {
+                    throw new BusinessRulesException("wrong fio");
+                }
             }
-            return loanResponse;
         } catch (NullPointerException e) {
-            loanResponse.setCreationFlag(-1);
-            return loanResponse;
+            throw new NullPointerException("npe");
+        } catch (BusinessRulesException e) {
+            throw new BusinessRulesException("request validation failed", e);
+        }
+        return loanResponse;
+    }
+
+    public void createManyRequests(int amount, LoanRequest loanRequest) {
+        for (int i = 0; i < amount; i++) {
+            repo.save(loanRequest);
         }
     }
 
@@ -78,7 +95,6 @@ public class DefaultLoanCalcService implements LoanCalcService {
                     loanResponse.setResponseType(LoanResponseType.APPROVED);
                 } else {
                     loanResponse.setResponseType(LoanResponseType.DENIED);
-                    loanResponse.setCreationFlag(-1);
                 }
                 break;
             case OOO:
@@ -86,12 +102,10 @@ public class DefaultLoanCalcService implements LoanCalcService {
                     loanResponse.setResponseType(LoanResponseType.APPROVED);
                 } else {
                     loanResponse.setResponseType(LoanResponseType.DENIED);
-                    loanResponse.setCreationFlag(-1);
                 }
                 break;
             case IP:
                 loanResponse.setResponseType(LoanResponseType.DENIED);
-                loanResponse.setCreationFlag(-1);
                 break;
         }
         return loanResponse;
