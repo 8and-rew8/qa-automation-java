@@ -29,7 +29,7 @@ public class AppTest {
     public void shouldGetErrorWhenApplyNullRequest() {
         LoanRequest loanNullRequest = new LoanRequest();
         assertThrows(NullPointerException.class, () -> new LoanCalcController(loanCalcService).createRequest(loanNullRequest),
-                "Expected NPE");
+                "Expected null");
     }
 
     @Test
@@ -66,156 +66,102 @@ public class AppTest {
 
     @Test
     @DisplayName("Case #6 - Не даем кредит ИПшникам")
-    public void shouldGetErrorWhenIpClientType() {
+    public void shouldGetErrorWhenIpClientType() throws BusinessRulesException {
         LoanRequest loanRequestForIp = new LoanRequest(ClientType.IP, 10, 1000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequestForIp);
             assertEquals(LoanResponseType.DENIED, loanResponse.getResponseType(),
                     "Expected denied response but actual response status is " + loanResponse.getResponseType());
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Case #7 - Даем кредит ООО только на суммы больше 10к")
-    public void shouldGetErrorWhenOooClientTypeAndAmountTooLittle() {
+    public void shouldGetErrorWhenOooClientTypeAndAmountTooLittle() throws BusinessRulesException {
         LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 10, 1000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
             assertEquals(LoanResponseType.DENIED, loanResponse.getResponseType(),
                     "Expected denied response but actual response status is " + loanResponse.getResponseType());
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Case #8 - Для ФЛ кредит на <= 12 месяцев")
-    public void shouldGetErrorWhenPersonLoanForMoreThenYear() {
+    public void shouldGetErrorWhenPersonLoanForMoreThenYear() throws BusinessRulesException {
         LoanRequest loanRequestForPerson = new LoanRequest(ClientType.PERSON, 15, 10000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequestForPerson);
             assertEquals(LoanResponseType.DENIED, loanResponse.getResponseType(),
                     "Expected denied response but actual response status is " + loanResponse.getResponseType());
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Case #9 - Для ООО кредит на < 12 месяцев")
-    public void shouldGetErrorWhenOooLoanForMoreThenYear() {
+    public void shouldGetErrorWhenOooLoanForMoreThenYear() throws BusinessRulesException {
         LoanRequest loanRequestForOoo = new LoanRequest(ClientType.OOO, 12, 11000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequestForOoo);
             assertEquals(LoanResponseType.DENIED, loanResponse.getResponseType(),
                     "Expected denied response but actual response status is " + loanResponse.getResponseType());
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Case #10 - Для ООО даем кредит на сумму больше 10к и сроком меньше 12м")
-    public void shouldNotGetErrorWhenOooLoanForLessThenYearAndAmountMoreThen10k() {
+    public void shouldNotGetErrorWhenOooLoanForLessThenYearAndAmountMoreThen10k() throws BusinessRulesException {
         LoanRequest loanRequestForOoo = new LoanRequest(ClientType.OOO, 10, 11000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequestForOoo);
             assertEquals(LoanResponseType.APPROVED, loanResponse.getResponseType(),
                     "Expected approved response but actual response status is " + loanResponse.getResponseType());
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Test
     @DisplayName("Case #11 - Получить статус запроса по uuid")
-    public void shouldGetStatusUsingUUID() {
+    public void shouldGetStatusUsingUUID() throws BusinessRulesException {
         LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 12, 11000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
             assertEquals(LoanResponseType.DENIED.name(), loanCalcService.getRequestStatus(loanResponse.getRequestUUID()),
                     "Expected request status denied but actual " + loanCalcService.getRequestStatus(loanResponse.getRequestUUID()));
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
 
     @Test
     @DisplayName("Case #12 - Можем обновить статус у только что созданной заявки с approved на denied")
-    public void shouldGetUpdatedRequestStatusAfterManagerUpdatingToDenied() {
+    public void shouldGetUpdatedRequestStatusAfterManagerUpdatingToDenied() throws BusinessRulesException {
         LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 10, 11000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
             assertEquals(String.class, loanResponse.getRequestUUID().getClass(), "Request didn't create");
             assertTrue(loanCalcService.updateRequestStatus(loanResponse.getRequestUUID()), "Status not updated");
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Case #13 - Можем обновить статус у только что созданной заявки с denied на approved")
-    public void shouldGetUpdatedRequestStatusAfterManagerUpdatingToApproved() {
+    public void shouldGetUpdatedRequestStatusAfterManagerUpdatingToApproved() throws BusinessRulesException {
         LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 12, 11000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
             assertTrue(loanCalcService.updateRequestStatus(loanResponse.getRequestUUID()), "Status not updated");
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Case #14 - Не можем обновить статус у заявки со статусом null")
-    public void shouldGetErrorWhenTryToUpdateRequestWithStatusNull() {
+    public void shouldGetErrorWhenTryToUpdateRequestWithStatusNull() throws BusinessRulesException {
         LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 12, 11000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
             loanResponse.setResponseType(null);
             assertFalse(loanCalcService.updateRequestStatus(loanResponse.getRequestUUID()),
                     "Status not updated");
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Case #15 - Не можем получить статус по несуществующему UUID")
-    public void shouldGetErrorWhenGetStatusNotExistedUUID() {
+    public void shouldGetErrorWhenGetStatusNotExistedUUID() throws BusinessRulesException {
         LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 10, 11000, "Пол Павель Михалыч");
-        try {
             new LoanCalcController(loanCalcService).createRequest(loanRequest);
             assertEquals("There is no such request with id abc", loanCalcService.getRequestStatus("abc"),
                     "Expected error but find request with id abc");
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Case #16 - Не можем обновить статус по нулевому UUID")
-    public void shouldGetErrorWhenTryToUpdateRequestStatusUsingNullUUID() {
+    public void shouldGetErrorWhenTryToUpdateRequestStatusUsingNullUUID() throws BusinessRulesException {
         LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 10, 11000, "Пол Павель Михалыч");
-        try {
             new LoanCalcController(loanCalcService).createRequest(loanRequest);
             assertFalse(loanCalcService.updateRequestStatus(null),
                     "Expected error but find request with null id");
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    @DisplayName("Case #17 - Переполнение массива")
-    public void shouldGetErrorWhenRepoIsFull() {
-        LoanCalcService localLoanCalcService = new DefaultLoanCalcService(new VariableLoanCalcRepo());
-        LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 10, 11000, "Пол Павель Михалыч");
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> localLoanCalcService.createManyRequests(101, loanRequest),
-                "Repo didn't expend");
     }
 
     @Test
@@ -253,27 +199,30 @@ public class AppTest {
 
     @Test
     @DisplayName("Case #22 - Выдаем кредит ФЛ")
-    public void shouldGivePersonLoanWhenOkRequest() {
+    public void shouldGivePersonLoanWhenOkRequest() throws BusinessRulesException {
         LoanRequest loanRequest = new LoanRequest(ClientType.PERSON, 11, 1000, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequest);
             assertEquals(LoanResponseType.APPROVED, loanResponse.getResponseType(),
                     "Expected approved response but actual response status is " + loanResponse.getResponseType());
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
     @DisplayName("Case #23 - Не даем кредит ФЛ на > 10к")
-    public void shouldGetErrorWhenPersonLoanForMoreThen10k() {
+    public void shouldGetErrorWhenPersonLoanForMoreThen10k() throws BusinessRulesException {
         LoanRequest loanRequestForPerson = new LoanRequest(ClientType.PERSON, 11, 10_001, "Пол Павель Михалыч");
-        try {
             LoanResponse loanResponse = new LoanCalcController(loanCalcService).createRequest(loanRequestForPerson);
             assertEquals(LoanResponseType.DENIED, loanResponse.getResponseType(),
                     "Expected denied response but actual response status is " + loanResponse.getResponseType());
-        } catch (BusinessRulesException e) {
-            e.printStackTrace();
-        }
+    }
+
+    @Test
+    @DisplayName("Case #24 - Верхний парог для месяцев")
+    public void shouldGetSum() throws BusinessRulesException {
+        LoanCalcRepo localLoanCalcRepo = new VariableLoanCalcRepo();
+        LoanCalcService localLoanCalcService = new DefaultLoanCalcService(localLoanCalcRepo);
+        LoanRequest loanRequest = new LoanRequest(ClientType.OOO, 10, 11_000, "Пол Павель Михалыч");
+            new LoanCalcController(localLoanCalcService).createRequest(loanRequest);
+
+        assertEquals(11_000, localLoanCalcService.requestsSum(ClientType.OOO));
     }
 }

@@ -7,6 +7,7 @@ import com.tinkoff.edu.app.interfaces.LoanCalcService;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,10 +36,10 @@ public class DefaultLoanCalcService implements LoanCalcService {
     public LoanResponse validationRequest(LoanRequest loanRequest) throws RuntimeException, BusinessRulesException {
         LoanResponse loanResponse = new LoanResponse();
         try {
-            boolean isPresent = Arrays.stream(ClientType.values()).anyMatch(element ->
-                    Objects.equals(element.getType(), loanRequest.getType().toString()));
+            boolean isPresent = Arrays.stream(ClientType.values())
+                    .anyMatch(element -> Objects.equals(element.getType(), loanRequest.getType().toString()));
             if ((loanRequest.getAmount() == 0) || (loanRequest.getMonths() == 0) || (!isPresent)) {
-                throw new NullPointerException("npe");
+                throw new NullPointerException("request with null argument");
             } else if (loanRequest.getAmount() < 0.01 || loanRequest.getAmount() > 999_999.99) {
                 throw new BusinessRulesException("wrong loan amount");
             } else if (loanRequest.getMonths() < 1 || loanRequest.getMonths() > 100) {
@@ -52,17 +53,11 @@ public class DefaultLoanCalcService implements LoanCalcService {
                 }
             }
         } catch (NullPointerException e) {
-            throw new NullPointerException("npe");
+            throw new NullPointerException("request with null argument");
         } catch (BusinessRulesException e) {
             throw new BusinessRulesException("request validation failed", e);
         }
         return loanResponse;
-    }
-
-    public void createManyRequests(int amount, LoanRequest loanRequest) {
-        for (int i = 0; i < amount; i++) {
-            repo.save(loanRequest);
-        }
     }
 
     /**
@@ -80,6 +75,15 @@ public class DefaultLoanCalcService implements LoanCalcService {
     public boolean updateRequestStatus(String requestUUID) {
         return repo.updateRequestStatus(requestUUID);
     }
+
+    @Override
+    public Double requestsSum(ClientType clientType) {
+        Optional<Double> a = repo.parameterizedRequestSearch(clientType).stream()
+                .map(LoanRequest::getAmount)
+                .reduce(Double::sum);
+        return a.get();
+    }
+
 
     /**
      * Loan calculation
