@@ -5,7 +5,9 @@ import com.tinkoff.edu.app.enums.LoanResponseType;
 import com.tinkoff.edu.app.interfaces.LoanCalcRepo;
 import com.tinkoff.edu.app.interfaces.LoanCalcService;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -67,21 +69,13 @@ public class DefaultLoanCalcService implements LoanCalcService {
      * @return LoanResponseType in String
      */
     @Override
-    public String getRequestStatus(String requestUUID) {
+    public String getRequestStatus(String requestUUID) throws IOException {
         return repo.getRequestStatus(requestUUID);
     }
 
     @Override
-    public boolean updateRequestStatus(String requestUUID) {
+    public boolean updateRequestStatus(String requestUUID) throws IOException {
         return repo.updateRequestStatus(requestUUID);
-    }
-
-    @Override
-    public Double requestsSum(ClientType clientType) {
-        Optional<Double> a = repo.parameterizedRequestSearch(clientType).stream()
-                .map(LoanRequest::getAmount)
-                .reduce(Double::sum);
-        return a.get();
     }
 
 
@@ -91,24 +85,29 @@ public class DefaultLoanCalcService implements LoanCalcService {
      * @param loanRequest
      */
     @Override
-    public LoanResponse createRequest(LoanRequest loanRequest) {
+    public LoanResponse createRequest(LoanRequest loanRequest) throws IOException {
         LoanResponse loanResponse = repo.save(loanRequest);
         switch (loanRequest.getType()) {
             case PERSON:
                 if ((loanRequest.getAmount() <= 10_000.0) & (loanRequest.getMonths() <= 12)) {
+                    repo.updateRequestStatus(loanResponse.getRequestUUID(), LoanResponseType.APPROVED);
                     loanResponse.setResponseType(LoanResponseType.APPROVED);
                 } else {
+                    repo.updateRequestStatus(loanResponse.getRequestUUID(), LoanResponseType.DENIED);
                     loanResponse.setResponseType(LoanResponseType.DENIED);
                 }
                 break;
             case OOO:
                 if ((loanRequest.getAmount() > 10_000.0) & (loanRequest.getMonths() < 12)) {
+                    repo.updateRequestStatus(loanResponse.getRequestUUID(), LoanResponseType.APPROVED);
                     loanResponse.setResponseType(LoanResponseType.APPROVED);
                 } else {
+                    repo.updateRequestStatus(loanResponse.getRequestUUID(), LoanResponseType.DENIED);
                     loanResponse.setResponseType(LoanResponseType.DENIED);
                 }
                 break;
             case IP:
+                repo.updateRequestStatus(loanResponse.getRequestUUID(), LoanResponseType.DENIED);
                 loanResponse.setResponseType(LoanResponseType.DENIED);
                 break;
         }

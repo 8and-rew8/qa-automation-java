@@ -26,4 +26,10 @@ public class LoanResponse {
     public void setResponseType(LoanResponseType responseType) {
         this.responseType = responseType;
     }
+
+    @Override
+    public String toString() {
+        return requestUUID +
+                "," + responseType;
+    }
 }
