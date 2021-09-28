@@ -36,4 +36,12 @@ public class LoanRequest {
     public double getAmount() {
         return amount;
     }
+
+    @Override
+    public String toString() {
+        return type +
+                "," + months +
+                "," + amount +
+                "," + fio;
+    }
 }
